@@ -40,6 +40,9 @@
                 </div>
                 <div class="question-body">
                     <pre class="question-text">{{ r.question.question }}</pre>
+                    {% if r.question.image %}
+                    <img class="question-image" src="{{ url_for('static', filename='images/' + r.question.image) }}" alt="题目配图">
+                    {% endif %}
                 </div>
                 <div class="answer-info">
                     <p><strong>你的答案：</strong>

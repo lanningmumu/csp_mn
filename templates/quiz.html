@@ -23,6 +23,9 @@
                     </div>
                     <div class="question-body">
                         <pre class="question-text">{{ q.question }}</pre>
+                        {% if q.image %}
+                        <img class="question-image" src="{{ url_for('static', filename='images/' + q.image) }}" alt="题目配图">
+                        {% endif %}
                     </div>
                     <div class="options-group">
                         {% for opt in q.options %}
