@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 模拟考试</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSP-J 模拟考试系统</h1>
+            <p class="subtitle">CCF非专业级软件能力认证入门级 · 模拟测试</p>
+        </header>
+
+        <main class="home-card">
+            {% if error %}
+            <div class="error-msg">{{ error }}</div>
+            {% endif %}
+
+            <div class="info-box">
+                <h2>考试说明</h2>
+                <ul>
+                    <li>题库共 {{ question_count }} 道单项选择题，覆盖CSP-J核心知识点</li>
+                    <li>每次测试随机抽取指定数量的题目</li>
+                    <li>提交后即时显示正确率、正确答案和详细解析</li>
+                    <li>可反复练习，每次题目随机排列</li>
+                </ul>
+            </div>
+
+            <form action="{{ url_for('start') }}" method="POST" class="start-form">
+                <label for="student_name">姓名：</label>
+                <input type="text" name="student_name" id="student_name"
+                       list="student-list" placeholder="输入姓名或选择已有"
+                       autocomplete="off" class="name-input">
+                <datalist id="student-list">
+                    {% for s in students %}
+                    <option value="{{ s }}">{{ s }}</option>
+                    {% endfor %}
+                </datalist>
+                <label for="count">题数：</label>
+                <select name="count" id="count">
+                    <option value="10" selected>10 题</option>
+                    <option value="5">5 题</option>
+                    <option value="15">15 题</option>
+                    <option value="20">20 题</option>
+                </select>
+                <button type="submit" class="btn-start">开始考试</button>
+            </form>
+
+            {% if exam_count > 0 %}
+            <div class="home-actions">
+                <form action="{{ url_for('start_wrong') }}" method="POST" class="start-form">
+                    <label for="wstudent_name">姓名：</label>
+                    <input type="text" name="student_name" id="wstudent_name"
+                           list="student-list" placeholder="留空则看所有错题"
+                           autocomplete="off" class="name-input">
+                    <label for="wcount">题数：</label>
+                    <select name="count" id="wcount">
+                        <option value="10" selected>10 题</option>
+                        <option value="5">5 题</option>
+                        <option value="15">15 题</option>
+                        <option value="20">20 题</option>
+                    </select>
+                    <button type="submit" class="btn-wrong">错题重练</button>
+                </form>
+                <div class="action-links">
+                    <a href="{{ url_for('history') }}" class="btn-history">成绩历史</a>
+                    <a href="{{ url_for('leaderboard') }}" class="btn-history">排行榜</a>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+
+        <footer>
+            <p>题库参考CSP-J历年真题知识点编制 · 仅供学习练习使用</p>
+        </footer>
+    </div>
+</body>
+</html>

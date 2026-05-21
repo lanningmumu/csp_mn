@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 排行榜</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>排行榜</h1>
+        </header>
+
+        <div class="leaderboard-section">
+            <h2>单场最佳成绩</h2>
+            {% if score_board %}
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>姓名</th>
+                        <th>最佳正确率</th>
+                        <th>最佳成绩</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in score_board %}
+                    <tr>
+                        <td class="rank-cell">{{ loop.index }}</td>
+                        <td>{{ r.student_name }}</td>
+                        <td>{{ r.best_accuracy }}%</td>
+                        <td>{{ r.best_correct }}/{{ r.at_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-msg">暂无数据，快去参加考试吧！</p>
+            {% endif %}
+        </div>
+
+        <div class="leaderboard-section">
+            <h2>累计答对总题数</h2>
+            {% if total_board %}
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>姓名</th>
+                        <th>累计答对</th>
+                        <th>考试次数</th>
+                        <th>综合正确率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in total_board %}
+                    <tr>
+                        <td class="rank-cell">{{ loop.index }}</td>
+                        <td>{{ r.student_name }}</td>
+                        <td>{{ r.total_correct }}</td>
+                        <td>{{ r.exam_count }}</td>
+                        <td>{{ r.overall_accuracy }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-msg">暂无数据，快去参加考试吧！</p>
+            {% endif %}
+        </div>
+
+        <div class="action-bar">
+            <a href="{{ url_for('history') }}" class="btn-back">成绩历史</a>
+            <a href="{{ url_for('index') }}" class="btn-back">返回首页</a>
+        </div>
+    </div>
+</body>
+</html>

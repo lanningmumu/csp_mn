@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 模拟考试 - 答题中</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSP-J 模拟考试</h1>
+            <p class="subtitle">共 {{ questions|length }} 题 · 请认真作答</p>
+        </header>
+
+        <form action="{{ url_for('submit') }}" method="POST" id="quiz-form">
+            <div class="questions-list">
+                {% for i, q in enumerate(questions) %}
+                <div class="question-card" id="q-card-{{ q.id }}">
+                    <div class="question-header">
+                        <span class="question-number">第 {{ i + 1 }} 题</span>
+                        <span class="question-source">{{ get_source(q) }}</span>
+                    </div>
+                    <div class="question-body">
+                        <pre class="question-text">{{ q.question }}</pre>
+                    </div>
+                    <div class="options-group">
+                        {% for opt in q.options %}
+                        <label class="option-label">
+                            <input type="radio" name="q{{ q.id }}" value="{{ opt[0] }}" required>
+                            <span class="option-text">{{ opt }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="submit-area">
+                <button type="submit" class="btn-submit">提交答卷</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 成绩历史</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>成绩历史</h1>
+        </header>
+
+        {% if students %}
+        <div class="filter-bar">
+            <span class="filter-label">筛选学生：</span>
+            <a href="{{ url_for('history') }}" class="filter-tag {{ 'active' if not current_student else '' }}">全部</a>
+            {% for s in students %}
+            <a href="{{ url_for('history', student=s) }}" class="filter-tag {{ 'active' if current_student == s else '' }}">{{ s }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if exams %}
+        <div class="history-list">
+            {% for e in exams %}
+            <a href="{{ url_for('exam_detail', exam_id=e.id) }}" class="history-card">
+                <div class="history-main">
+                    <span class="history-id">#{{ e.id }}</span>
+                    {% if e.student_name %}
+                    <span class="history-student">{{ e.student_name }}</span>
+                    {% endif %}
+                    <span class="history-date">{{ e.created_at }}</span>
+                </div>
+                <div class="history-score">
+                    <span class="score-circle-mini {{ 'pass' if e.accuracy >= 60 else 'fail' }}">
+                        {{ e.accuracy }}%
+                    </span>
+                    <span class="history-count">{{ e.correct }}/{{ e.total }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="home-card">
+            <p class="empty-msg">还没有考试记录，快去参加一次考试吧！</p>
+        </div>
+        {% endif %}
+
+        <div class="action-bar">
+            <a href="{{ url_for('leaderboard') }}" class="btn-back">排行榜</a>
+            <a href="{{ url_for('index') }}" class="btn-back">返回首页</a>
+        </div>
+    </div>
+</body>
+</html>

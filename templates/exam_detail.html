@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 考试详情</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>考试详情 #{{ exam.id }}</h1>
+            <p class="subtitle">{{ exam.created_at }}</p>
+        </header>
+
+        <div class="score-summary">
+            <div class="score-circle {{ 'pass' if exam.accuracy >= 60 else 'fail' }}">
+                <span class="score-number">{{ exam.accuracy }}%</span>
+                <span class="score-label">正确率</span>
+            </div>
+            <div class="score-detail">
+                <p>正确：<strong>{{ exam.correct }}</strong> / {{ exam.total }} 题</p>
+                <p class="score-msg">
+                    {% if exam.accuracy == 100 %}满分！太厉害了！
+                    {% elif exam.accuracy >= 80 %}优秀！掌握得很好！
+                    {% elif exam.accuracy >= 60 %}不错，继续加油！
+                    {% else %}需要多加练习，查漏补缺！
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="answers-section">
+            <h2>答题详情</h2>
+            {% for r in results %}
+            <div class="answer-card {{ 'correct' if r.is_correct else 'wrong' }}">
+                <div class="answer-header">
+                    <span class="question-number">第 {{ loop.index }} 题</span>
+                    <span class="question-source">{{ get_source(r.question) }}</span>
+                    <span class="result-badge">{{ '✓ 正确' if r.is_correct else '✗ 错误' }}</span>
+                </div>
+                <div class="question-body">
+                    <pre class="question-text">{{ r.question.question }}</pre>
+                </div>
+                <div class="answer-info">
+                    <p><strong>你的答案：</strong>
+                        <span class="{{ 'correct-ans' if r.is_correct else 'wrong-ans' }}">
+                            {{ r.user_answer if r.user_answer else '未作答' }}
+                        </span>
+                    </p>
+                    <p><strong>正确答案：</strong><span class="correct-ans">{{ r.question.answer }}</span></p>
+                </div>
+                <div class="analysis-box">
+                    <strong>解析：</strong>{{ r.question.analysis }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="action-bar">
+            <a href="{{ url_for('history') }}" class="btn-back">返回成绩历史</a>
+        </div>
+    </div>
+</body>
+</html>
